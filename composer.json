@@ -1,0 +1,30 @@
+{
+    "name": "hwacom/eip-login",
+    "description": "EIP Login Package",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Hwacom\\EIPLogin\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "TzuHsuan",
+            "email": "kuanmei168@gmail.com"
+        }
+    ],
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.x-dev"
+        },
+        "laravel": {
+            "providers": [
+                "Hwacom\\EIPLogin\\EIPLoginServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "laravel/ui": "^3.0"
+    }
+}
