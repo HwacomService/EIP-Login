@@ -1,6 +1,6 @@
 <?php
 
-namespace Hwacom\ClientSso;
+namespace Hwacom\EIPLogin;
 
 use Illuminate\Support\ServiceProvider;
 

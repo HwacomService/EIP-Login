@@ -15,7 +15,7 @@
     ],
     "extra": {
         "branch-alias": {
-            "dev-master": "2.x-dev"
+            "dev-master": "1.x-dev"
         },
         "laravel": {
             "providers": [
@@ -24,7 +24,11 @@
         }
     },
     "minimum-stability": "dev",
+    "require-dev": {
+        "laravel/breeze": "^1.9"
+    },
     "require": {
-        "laravel/ui": "^3.0"
+        "laravel/ui": "^3.0",
+        "hwacom/client-sso": "^2.5"
     }
 }

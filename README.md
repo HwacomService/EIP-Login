@@ -5,8 +5,19 @@
 [![Latest Stable Version](http://poser.pugx.org/hwacom/client-sso/v)](https://packagist.org/packages/hwacom/client-sso)
 ## 前言
 
-要用我華電SSO必先安裝客戶端
-
+先安裝laravel breeze
+```
+composer require laravel/breeze --dev
+```
+```
+php artisan migrate
+```
+```
+npm install
+```
+```
+npm run dev
+```
 ## 安裝說明
 
 ```bash

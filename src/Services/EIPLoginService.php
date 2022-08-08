@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Services;
+namespace Hwacom\EIPLogin\Services;
 
 
-use App\Libraries\ApiLib;
 use Hwacom\ClientSso\Services\SSOService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
