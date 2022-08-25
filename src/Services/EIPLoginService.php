@@ -29,6 +29,8 @@ class EIPLoginService
         //組資料丟去EIP
         $url     = config('eip.eip_rul');
         $request = [
+            //帳號欄位名稱 不同子系統可能不同(email登入)
+            'userColumnName'        => $data['userColumnName'],
             //帳號欄位名稱 => user輸入的帳號
             $data['userColumnName'] => $data['username'],
             'password'              => $data['password'],

@@ -1,4 +1,4 @@
-# SSO Client Package via Hwacom SSO
+# EIP Login Package via Hwacom 
 
 <a href="https://github.com/mozielin/Client-SSO/actions"><img src="https://github.com/mozielin/Client-SSO/workflows/PHP Composer/badge.svg" alt="Build Status"></a>
 [![Total Downloads](http://poser.pugx.org/hwacom/client-sso/downloads)](https://packagist.org/packages/hwacom/client-sso)
@@ -10,6 +10,9 @@
 composer require laravel/breeze --dev
 ```
 ```
+php artisan breeze:install
+```
+```
 php artisan migrate
 ```
 ```
@@ -18,6 +21,7 @@ npm install
 ```
 npm run dev
 ```
+安裝完breeze套件後請先安裝hwacom/client-sso套件
 ## 安裝說明
 
 ```bash
@@ -29,12 +33,13 @@ composer require hwacom/eip-login
 Composer安裝完後要需要修改 `config/app.php` 找到 providers 區域並添加:
 
 ```php
-\Hwacom\SSO\SSOServiceProvider::class,
+\Hwacom\EIPLogin\EIPLoginServiceProvider::class,
 ```
 
 ## Config設定檔發佈 
 
-用下列指定會建立sso.php設定檔，需要在 `.env` 檔案中增加設定.
+用下列指令會建立eip.php設定檔，需要在 `.env` 檔案中增加設定，
+同時建立出eip_login語系檔
 
 ```bash
 php artisan vendor:publish
@@ -60,6 +65,25 @@ COOKIE_DOMAIN   =
 ```
 
 ## [LoginController] 增加兩個Function
+__construct
+```
+use Hwacom\EIPLogin\Services\EIPLoginService;
+```
+```
+use AuthenticatesUsers;
+
+public function __construct()
+{
+    $this->loginService = new EIPLoginService();
+}
+```
+增加function
+```
+public function username()
+{
+    return 'enumber'; //帳號欄位名
+}
+```
 Login
 
 ```
@@ -80,6 +104,10 @@ public function store()
     }
     
     $this->login($request); //一般登入
+
+    $request->session()->regenerate();
+
+    return redirect()->intended(RouteServiceProvider::HOME);
 }
 ```
 
@@ -104,9 +132,4 @@ public function destroy(Request $request)
 
     return redirect(config("sso.sso_host"));
 }
-```
-## [Middleware] 增加至`Http/Kernel.php`web Group中
-
-```php
-\Hwacom\ClientSso\Middleware\SSOAuthenticated::class,
 ```
