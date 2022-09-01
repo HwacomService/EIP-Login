@@ -7,13 +7,13 @@
 
 先安裝laravel breeze
 ```
-composer require laravel/breeze --dev
-```
-```
 php artisan breeze:install
 ```
 ```
-php artisan migrate
+npm uninstall tailwindcss postcss autoprefixer
+```
+```
+npm install tailwindcss@npm:@tailwindcss/postcss7-compat @tailwindcss/postcss7-compat postcss@^7 autoprefixer@^9
 ```
 ```
 npm install
@@ -21,9 +21,13 @@ npm install
 ```
 npm run dev
 ```
+```
+php artisan migrate
+```
+
 ## 需提前安裝並設定的套件
-hwacom/client-sso，
-hwacom/personnel-info
+<a href="https://github.com/HwacomService/SSO-Client">hwacom/client-sso</a>，
+<a href="https://github.com/HwacomService/Personnel-Info">hwacom/personnel-info</a>
 
 ## 安裝說明
 
@@ -71,6 +75,7 @@ COOKIE_DOMAIN   =
 __construct
 ```
 use Hwacom\EIPLogin\Services\EIPLoginService;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 ```
 ```
 use AuthenticatesUsers;
@@ -99,9 +104,8 @@ public function store()
     if (config('eip.eip_auth')) { //EIP登入
             $data = [
                 'ip'             => $request->ip(),
-                'username'       => $request->帳號欄位,
+                'username'       => $request->enumber,
                 'password'       => $request->password,
-                'userColumnName' => $this->username(),
             ];
             $this->loginService->loginEIP($data);
     }
@@ -135,4 +139,28 @@ public function destroy(Request $request)
 
     return redirect(config("sso.sso_host"));
 }
+```
+## [LoginRequest] 調整rules
+```
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            'enumber' => 'required|string',
+            'password' => 'required|string',
+        ];
+    }
+```
+## [login.blade] 調整
+帳號input調整
+```
+   <div>
+        <x-label for="enumber" :value="__('工號')" />
+    
+        <x-input id="enumber" class="block mt-1 w-full" type="text" name="enumber" :value="old('enumber')" required autofocus />
+   </div>
 ```
