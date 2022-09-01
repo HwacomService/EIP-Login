@@ -34,7 +34,7 @@ class EIPLoginServiceProvider extends ServiceProvider
                 "$basePath/publishable/config/eip.php" => config_path('eip.php'),
             ],
             'resources' => [
-                "$basePath/publishable/resources/lang/tw/eip_login.php" => resource_path('resources/lang/tw/eip_login.php'),
+                "$basePath/publishable/resources/lang/tw/eip_login.php" => resource_path('/lang/tw/eip_login.php'),
             ],
         ];
 
