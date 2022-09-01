@@ -60,7 +60,7 @@ class EIPLoginService
 
             if ($payload->enumber) { //確定有enumber
                 //同步user資料 UpdateOrCreate
-                $user = $this->EmployeeInfoService->FetchUser($payload->enumber);
+                $user = $this->EmployeeInfoService->FetchUser($payload->enumber, $data);
                 Auth::login($user);
                 $path = Session::get('redirect') ?? '/';
                 return redirect($path);

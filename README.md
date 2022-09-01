@@ -21,7 +21,10 @@ npm install
 ```
 npm run dev
 ```
-安裝完breeze套件後請先安裝hwacom/client-sso套件
+## 需提前安裝並設定的套件
+hwacom/client-sso，
+hwacom/personnel-info
+
 ## 安裝說明
 
 ```bash
