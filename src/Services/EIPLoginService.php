@@ -4,6 +4,7 @@ namespace Hwacom\EIPLogin\Services;
 
 
 use Hwacom\ClientSso\Services\SSOService;
+use Hwacom\PersonnelInfo\Services\EmployeeInfoService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +15,8 @@ class EIPLoginService
 {
     public function __construct()
     {
-        $this->SSOService = new SSOService();
+        $this->SSOService          = new SSOService();
+        $this->EmployeeInfoService = new EmployeeInfoService();
     }
 
     /**
@@ -56,14 +58,14 @@ class EIPLoginService
             [$base64header, $base64payload, $sign] = $tokens;
             $payload = json_decode($this->SSOService->base64UrlDecode($base64payload));
 
-            //從資料表取出user登入
-            $user = config('auth.providers.users.model')::where('enumber', $payload->enumber)->first();
-
-            if ($user) { //確定有user後登入並轉址
+            if ($payload->enumber) { //確定有enumber
+                //同步user資料 UpdateOrCreate
+                $user = $this->EmployeeInfoService->FetchUser($payload->enumber);
                 Auth::login($user);
                 $path = Session::get('redirect') ?? '/';
                 return redirect($path);
             }
+
         } elseif ($response && $response['message'] && $response['message']['type'] == 'eip_login.throttle') { //登入次數過多
             throw ValidationException::withMessages([
                 $data['userColumnName'] => [
@@ -91,8 +93,8 @@ class EIPLoginService
     }
 
     /**
-     * @param string $url
-     * @param array $payload
+     * @param  string  $url
+     * @param  array  $payload
      * @return string $result
      */
     public function postAPI($url = '', $payload = []): string
@@ -104,7 +106,7 @@ class EIPLoginService
             curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:application/json']);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 
@@ -117,7 +119,7 @@ class EIPLoginService
 
             return $result;
         } catch (\Exception $e) {
-            return 'error：'.$e;
+            return 'error：' . $e;
         }
     }
 }

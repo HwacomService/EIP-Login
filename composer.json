@@ -29,6 +29,7 @@
     },
     "require": {
         "laravel/ui": "^3.0",
-        "hwacom/client-sso": "^2.5"
+        "hwacom/client-sso": "^2.5",
+        "hwacom/personnel-info": "^1.0"
     }
 }
