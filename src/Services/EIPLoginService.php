@@ -31,14 +31,11 @@ class EIPLoginService
         //組資料丟去EIP
         $url     = config('eip.eip_rul');
         $request = [
-            //帳號欄位名稱 不同子系統可能不同(email登入)
-            'userColumnName'        => $data['userColumnName'],
-            //帳號欄位名稱 => user輸入的帳號
-            $data['userColumnName'] => $data['username'],
-            'password'              => $data['password'],
-            'secret'                => config('eip.CLIENT_SECRET'),
+            'enumber'  => $data['username'],
+            'password' => $data['password'],
+            'secret'   => config('eip.CLIENT_SECRET'),
             //唯一值抓cache用
-            'unique'                => isset($_SERVER['HTTP_X_GOOG_AUTHENTICATED_USER_ID']) ? explode(":", $_SERVER['HTTP_X_GOOG_AUTHENTICATED_USER_ID'])[1] : $data['ip'],
+            'unique'   => isset($_SERVER['HTTP_X_GOOG_AUTHENTICATED_USER_ID']) ? explode(":", $_SERVER['HTTP_X_GOOG_AUTHENTICATED_USER_ID'])[1] : $data['ip'],
         ];
 
         $response = self::postAPI($url, $request);
@@ -65,10 +62,9 @@ class EIPLoginService
                 $path = Session::get('redirect') ?? '/';
                 return redirect($path);
             }
-
         } elseif ($response && $response['message'] && $response['message']['type'] == 'eip_login.throttle') { //登入次數過多
             throw ValidationException::withMessages([
-                $data['userColumnName'] => [
+                'enumber' => [
                     trans($response['message']['type'], [
                         'seconds' => $response['message']['seconds'],
                         'minutes' => ceil($response['message']['seconds'] / 60), //剩餘鎖定時間
@@ -77,7 +73,7 @@ class EIPLoginService
             ])->status(Response::HTTP_TOO_MANY_REQUESTS);
         } elseif ($response && $response['message'] && $response['message']['type'] == 'eip_login.failed') { //帳號密碼、user錯誤
             throw ValidationException::withMessages([
-                $data['userColumnName'] => [
+                'enumber' => [
                     trans($response['message']['type'], [
                         'maxAttempts' => $response['message']['maxAttempts'], //錯誤次數限制依照eip
                     ]),
@@ -85,7 +81,7 @@ class EIPLoginService
             ]);
         } else { //eip啥都沒回
             throw ValidationException::withMessages([
-                $data['userColumnName'] => [trans('eip_login.eip_error')],
+                'enumber' => [trans('eip_login.eip_error')],
             ]);
         }
 
