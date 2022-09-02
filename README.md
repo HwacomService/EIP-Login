@@ -80,20 +80,20 @@ COOKIE_DOMAIN     =
 
 ## [LoginController] 增加兩個Function
 
-__construct
-
 ```
 use Hwacom\EIPLogin\Services\EIPLoginService;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 ```
 
 ```
-use AuthenticatesUsers;
-
-public function __construct()
+class LoginController extends Controller
 {
-    $this->loginService = new EIPLoginService();
-}
+    use AuthenticatesUsers;
+
+    public function __construct()
+    {
+        $this->loginService = new EIPLoginService();
+    }
 ```
 
 增加function
@@ -142,6 +142,10 @@ Logout
  */
 public function destroy(Request $request)
 {
+    if (config('sso.sso_enable') === true) {
+        setcookie("token", "", time() - 3600, '/', '.hwacom.com');
+    }
+
     Auth::guard('web')->logout();
 
     $request->session()->invalidate();
@@ -165,7 +169,7 @@ public function destroy(Request $request)
     public function rules()
     {
         return [
-            'enumber' => 'required|string',
+            'enumber'  => 'required|string',
             'password' => 'required|string',
         ];
     }
