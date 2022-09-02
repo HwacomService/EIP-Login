@@ -1,39 +1,47 @@
-# EIP Login Package via Hwacom 
+# EIP Login Package via Hwacom
 
 <a href="https://github.com/mozielin/Client-SSO/actions"><img src="https://github.com/mozielin/Client-SSO/workflows/PHP Composer/badge.svg" alt="Build Status"></a>
 [![Total Downloads](http://poser.pugx.org/hwacom/client-sso/downloads)](https://packagist.org/packages/hwacom/client-sso)
 [![Latest Stable Version](http://poser.pugx.org/hwacom/client-sso/v)](https://packagist.org/packages/hwacom/client-sso)
-## 前言
-
-先安裝laravel breeze
-```
-php artisan breeze:install
-```
-```
-npm uninstall tailwindcss postcss autoprefixer
-```
-```
-npm install tailwindcss@npm:@tailwindcss/postcss7-compat @tailwindcss/postcss7-compat postcss@^7 autoprefixer@^9
-```
-```
-npm install
-```
-```
-npm run dev
-```
-```
-php artisan migrate
-```
-
-## 需提前安裝並設定的套件
-<a href="https://github.com/HwacomService/SSO-Client">hwacom/client-sso</a>，
-<a href="https://github.com/HwacomService/Personnel-Info">hwacom/personnel-info</a>
 
 ## 安裝說明
 
 ```bash
 composer require hwacom/eip-login
 ```
+
+## 需提前安裝並設定的套件
+
+laravel/breeze
+
+```
+php artisan breeze:install
+```
+
+```
+npm uninstall tailwindcss postcss autoprefixer
+```
+
+```
+npm install tailwindcss@npm:@tailwindcss/postcss7-compat @tailwindcss/postcss7-compat postcss@^7 autoprefixer@^9
+```
+
+```
+npm install
+```
+
+```
+npm run dev
+```
+
+```
+php artisan migrate
+```
+
+<br>SSO 登入<br>
+<a href="https://github.com/HwacomService/SSO-Client">hwacom/client-sso</a>
+<br><br>人員資料 HRepository<br>
+<a href="https://github.com/HwacomService/Personnel-Info">hwacom/personnel-info</a>
 
 ## Service Provider設定 (Laravel 5.5^ 會自動掛載)
 
@@ -43,16 +51,15 @@ Composer安裝完後要需要修改 `config/app.php` 找到 providers 區域並�
 \Hwacom\EIPLogin\EIPLoginServiceProvider::class,
 ```
 
-## Config設定檔發佈 
+## Config設定檔發佈
 
-用下列指令會建立eip.php設定檔，需要在 `.env` 檔案中增加設定，
-同時建立出eip_login語系檔
+用下列指令會建立eip.php設定檔，需要在 `.env` 檔案中增加設定， 同時建立出eip_login語系檔
 
 ```bash
 php artisan vendor:publish
 ```
 
- 下列設定會自動增加在 `config/eip.php`
+下列設定會自動增加在 `config/eip.php`
 
 ```php
 'eip_auth' => env('EIP_AUTH', false),
@@ -65,18 +72,21 @@ php artisan vendor:publish
 在`.env` 中增加設定
 
 ```php
-EIP_AUTH        = true
-EIP_URL         = 
-CLIENT_SECRET   =
-COOKIE_DOMAIN   =
+EIP_AUTH          = true
+EIP_URL           = 
+EIP_CLIENT_SECRET =
+COOKIE_DOMAIN     =
 ```
 
 ## [LoginController] 增加兩個Function
+
 __construct
+
 ```
 use Hwacom\EIPLogin\Services\EIPLoginService;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 ```
+
 ```
 use AuthenticatesUsers;
 
@@ -85,13 +95,16 @@ public function __construct()
     $this->loginService = new EIPLoginService();
 }
 ```
+
 增加function
+
 ```
 public function username()
 {
     return 'enumber'; //帳號欄位名
 }
 ```
+
 Login
 
 ```
@@ -140,7 +153,9 @@ public function destroy(Request $request)
     return redirect(config("sso.sso_host"));
 }
 ```
+
 ## [LoginRequest] 調整rules
+
 ```
     /**
      * Get the validation rules that apply to the request.
@@ -155,8 +170,11 @@ public function destroy(Request $request)
         ];
     }
 ```
+
 ## [login.blade] 調整
+
 帳號input調整
+
 ```
    <div>
         <x-label for="enumber" :value="__('工號')" />
