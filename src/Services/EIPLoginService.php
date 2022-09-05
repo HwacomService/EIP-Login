@@ -43,11 +43,6 @@ class EIPLoginService
         //success
         //$response['data'] 回傳的token
 
-        //error
-        //$response['message']['type'] eip_login.throttle:登入錯誤次數過高鎖時間中 eip_login.failed:帳號密碼錯誤
-        //$response['message']['seconds'] 帳號鎖定中(剩餘被鎖時間)
-        //$response['message']['maxAttempts'] 錯誤限制次數(eip設定)
-
         if ($response && $response['success'] && $response['data']) { //回傳成功
             setcookie('token', $response['data'], time() + config('eip.JWT_EXP'), '/', config('eip.COOKIE_DOMAIN')); //把token設cookie
 
@@ -62,27 +57,10 @@ class EIPLoginService
                 $path = Session::get('redirect') ?? '/';
                 return redirect($path);
             }
-        } elseif ($response && $response['message'] && $response['message']['type'] == 'eip_login.throttle') { //登入次數過多
-            throw ValidationException::withMessages([
-                'enumber' => [
-                    trans($response['message']['type'], [
-                        'seconds' => $response['message']['seconds'],
-                        'minutes' => ceil($response['message']['seconds'] / 60), //剩餘鎖定時間
-                    ]),
-                ],
-            ])->status(Response::HTTP_TOO_MANY_REQUESTS);
-        } elseif ($response && $response['message'] && $response['message']['type'] == 'eip_login.failed') { //帳號密碼、user錯誤
-            throw ValidationException::withMessages([
-                'enumber' => [
-                    trans($response['message']['type'], [
-                        'maxAttempts' => $response['message']['maxAttempts'], //錯誤次數限制依照eip
-                    ]),
-                ],
-            ]);
-        } else { //eip啥都沒回
-            throw ValidationException::withMessages([
-                'enumber' => [trans('eip_login.eip_error')],
-            ]);
+        } elseif ($response && $response['message']) {
+            throw ValidationException::withMessages(['enumber' => $response['message']]);
+        } else {
+            throw ValidationException::withMessages(['enumber' => 'EIP連線失敗']);
         }
 
         return false;
