@@ -168,10 +168,14 @@ public function destroy(Request $request)
      */
     public function rules()
     {
-        return [
-            'enumber'  => 'required|string',
-            'password' => 'required|string',
-        ];
+        if (!config('eip.eip_auth')) {
+            return [
+                'enumber'  => 'required|string',
+                'password' => 'required|string',
+            ];
+        } else {
+            return [];
+        }
     }
 ```
 

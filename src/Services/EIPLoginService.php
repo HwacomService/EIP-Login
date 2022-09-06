@@ -8,6 +8,7 @@ use Hwacom\PersonnelInfo\Services\EmployeeInfoService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 
@@ -30,12 +31,16 @@ class EIPLoginService
     {
         //組資料丟去EIP
         $url     = config('eip.eip_rul');
-        $request = [
+        $auth    = [
             'enumber'  => $data['username'],
             'password' => $data['password'],
-            'secret'   => config('eip.CLIENT_SECRET'),
+        ];
+        $auth    = Crypt::encrypt($auth);
+        $request = [
+            'auth'   => $auth,
+            'secret' => config('eip.CLIENT_SECRET'),
             //唯一值抓cache用
-            'unique'   => isset($_SERVER['HTTP_X_GOOG_AUTHENTICATED_USER_ID']) ? explode(":", $_SERVER['HTTP_X_GOOG_AUTHENTICATED_USER_ID'])[1] : $data['ip'],
+            'unique' => isset($_SERVER['HTTP_X_GOOG_AUTHENTICATED_USER_ID']) ? explode(":", $_SERVER['HTTP_X_GOOG_AUTHENTICATED_USER_ID'])[1] : $data['ip'],
         ];
 
         $response = self::postAPI($url, $request);
