@@ -7,4 +7,6 @@ return [
     'JWT_EXP' => env('JWT_EXP', 900),
     'CLIENT_SECRET' => env('EIP_CLIENT_SECRET'),
     'COOKIE_DOMAIN' => env('COOKIE_DOMAIN', '.hwacom.com'),
+    //User Model
+    'model' => App\Models\User::class,
 ];

@@ -67,6 +67,8 @@ php artisan vendor:publish
 'JWT_EXP' => env('JWT_EXP', 900),
 'CLIENT_SECRET' => env('EIP_CLIENT_SECRET'),
 'COOKIE_DOMAIN' => env('COOKIE_DOMAIN'),
+
+'model' => App\Models\User::class,
 ```
 
 在`.env` 中增加設定
@@ -121,13 +123,17 @@ public function store()
                 'password'       => $request->password,
             ];
             $this->loginService->loginEIP($data);
+            $path = Session::get('redirect) ?? '/';
+            $request->session()->regenerate();
+            return redirect($path);    
+    } else {
+        $this->login($request); //一般登入
+    
+        $request->session()->regenerate();
+    
+        return redirect()->intended(RouteServiceProvider::HOME);
     }
     
-    $this->login($request); //一般登入
-
-    $request->session()->regenerate();
-
-    return redirect()->intended(RouteServiceProvider::HOME);
 }
 ```
 

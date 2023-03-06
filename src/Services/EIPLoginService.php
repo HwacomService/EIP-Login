@@ -57,10 +57,9 @@ class EIPLoginService
 
             if ($payload->enumber) { //確定有enumber
                 //同步user資料 UpdateOrCreate
-                $user = $this->EmployeeInfoService->FetchUser($payload->enumber, $data);
+                $user = config('eip.model')::where('enumber', $payload->enumber)->first();
                 Auth::login($user, true);
-                $path = Session::get('redirect') ?? '/';
-                return redirect($path);
+                return true;
             }
         } elseif ($response && $response['message']) {
             throw ValidationException::withMessages(['enumber' => $response['message']]);
