@@ -30,7 +30,7 @@ class EIPLoginService
     public function loginEIP($data)
     {
         //組資料丟去EIP
-        $url     = config('eip.eip_url');
+        $url     = config('eip.eip_url').'/api/login';
         $auth    = [
             'enumber'  => $data['username'],
             'password' => $data['password'],
