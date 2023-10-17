@@ -58,7 +58,7 @@ class EIPLoginService
             if ($payload->enumber) { //確定有enumber
                 //同步user資料 UpdateOrCreate
                 $user = config('eip.model')::where('enumber', $payload->enumber)->first();
-                Auth::login($user, true);
+                Auth::login($user, false);
                 return true;
             }
         } elseif ($response && $response['message']) {
