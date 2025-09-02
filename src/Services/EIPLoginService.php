@@ -2,7 +2,6 @@
 
 namespace Hwacom\EIPLogin\Services;
 
-
 use Hwacom\ClientSso\Services\SSOService;
 use Hwacom\PersonnelInfo\Services\EmployeeInfoService;
 use Illuminate\Http\Request;
@@ -14,6 +13,9 @@ use Illuminate\Validation\ValidationException;
 
 class EIPLoginService
 {
+    protected SSOService $SSOService;
+    protected EmployeeInfoService $EmployeeInfoService;
+
     public function __construct()
     {
         $this->SSOService          = new SSOService();
@@ -101,4 +103,3 @@ class EIPLoginService
         }
     }
 }
-
